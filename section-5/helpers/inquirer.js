@@ -1,19 +1,20 @@
 const inquirer = require('inquirer');
 require('colors');
 
+
 const questions = [
     {
         type: 'list',
         name: 'option',
         message: 'What you want to do?',
-        // choices:['1. Create a task','opt2','opt3'], this is one option
+        // choices:['1. Create a task','opt2','opt3'], this is another way to set up choices.
         choices:[{
             value:'1',
             name:`${'1'.green}. Create a task`
         },
         {
             value:'2',
-            name:`${'2'.green}. List task`
+            name:`${'2'.green}. List tasks`
         },
         {
             value:'3',
@@ -29,7 +30,7 @@ const questions = [
         },
         {
             value:'6',
-            name:`${'6'.green}. Delete task`
+            name:`${'6'.green}. Delete task(s)`
         },
         {
             value:'0',
@@ -39,7 +40,11 @@ const questions = [
     },
 ]
 
-
+/**
+ * It starts the Inquirer Menu.
+ * Check the variable questions to see retrieve all choices.
+ * @returns inquirer.prompt - Choose the option that you want.
+ */
 const inquirerMenu = async() => {
     console.log('=========================='.green);
     console.log('   Choose an option    '.white);
@@ -48,6 +53,9 @@ const inquirerMenu = async() => {
     return option;
 }
 
+/**
+ * @returns inquirer.prompt - ask if you want to continue.
+ */
 const pause = async () => {
     const pauseQuestion = [{
         name:'isPaused',
@@ -58,6 +66,10 @@ const pause = async () => {
     return isPaused;
 }
 
+/**
+ * @param {String} message 
+ * @returns inquirer.prompt - reading input that was received by param.
+ */
 const readInput = async(message) => {
 
     const question = [
@@ -77,6 +89,11 @@ const readInput = async(message) => {
     return desc;
 }
 
+/**
+ * It receives a list of task and will delete if you want.
+ * @param {Array} tasks 
+ * @returns inquirer.prompt - ask if you want delete the choosen ones.
+ */
 const listTasksDeleted = async (tasks = []) =>{
     const choices = tasks.map((task, i)=>{
         const idx = `${i+1}.`.green;
@@ -99,6 +116,11 @@ const listTasksDeleted = async (tasks = []) =>{
     return id;
 };
 
+/**
+ * Select ToDo tasks that you want.
+ * @param {Array} tasks 
+ * @returns inquirer.prompt - retrieves a list of checkboxes
+ */
 const showListChecklist = async (tasks = []) =>{
     const choices = tasks.map((task, i)=>{
         const idx = `${i+1}.`.green;
@@ -120,6 +142,10 @@ const showListChecklist = async (tasks = []) =>{
     return ids;
 };
 
+/**
+ * @param {String} message 
+ * @returns inquirer.prompt - Retrieve a message if you want confirm
+ */
 const confirm = async (message) => {
     const question = [{
         type: 'confirm',

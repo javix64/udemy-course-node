@@ -1,9 +1,15 @@
 const { v4: uuidv4 } = require('uuid');
 
+/**
+ * The main key of the model that is used in Tasks.
+ * 
+ * Task : {id, description, completedOn}
+ */
+
 class Task {
     id = '';
     description = '';
-    completedOn = 'date..';
+    completedOn = '';
 
     constructor( description ){
         this.id = uuidv4();

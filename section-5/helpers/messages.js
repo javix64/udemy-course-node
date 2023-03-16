@@ -1,12 +1,15 @@
 require('colors');
-
+/**
+ * This file is used nowhere. 
+ * But i will keep it because it's the previous step to implement Inquirer.
+ * Also i played with colors package.
+ */
 const showMenu = () => {
 
     return new Promise(resolve=>{
         console.log('=========================='.green);
         console.log('   Choose an option    '.green);
         console.log('==========================\n'.green);
-
         console.log(`${`1.`.green} Create task`);
         console.log(`${`2.`.green} List task`);
         console.log(`${`3.`.green} List task done`);

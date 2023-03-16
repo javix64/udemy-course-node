@@ -1,10 +1,13 @@
 const Task = require('./task')
 
-/*
-*
-* */
+/**
+ * Tasks Model.
+ * @constructor _list: collection of tasks;
+ */
 class Tasks {
     _list = {};
+    // 'this' works assigning the item _list to all this class,
+    // so it can be accesible from everywhere in this class.
     constructor() {
         this._list = {};
     }
@@ -24,11 +27,13 @@ class Tasks {
         return list;
     }
 
+    // Create a task with a specify description
     createTask(desc=''){
         const task = new Task(desc);
         this._list[task.id] = task;
     }
 
+    // List all ToDo tasks.
     listAll(){
         console.log();
         this.listArr.map(({description, completedOn}, key)=>{
@@ -38,6 +43,7 @@ class Tasks {
         })
     }
 
+    // Logic of show pending tasks or completed tasks.
     listPendingCompleted(completed = true){
         let counter = 0;
         return this.listArr.filter(({description, completedOn})=>{
