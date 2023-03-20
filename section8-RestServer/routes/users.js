@@ -4,7 +4,7 @@ const { usersGet,usersPost, usersPut, usersPatch, usersDelete } = require('../co
 
 // this is the route
 // The callback is the controller that is handled by route.
-// DON'T PUT THE CONTROLLER INSIDE ROUTES => BAD PRACTICE 
+// DON'T SET CONTROLLER INSIDE ROUTES => BAD PRACTICE 
 // ---------
 // router.get('/',(req, res)=>{
 //     res.status(200).json({
@@ -20,7 +20,7 @@ router.get('/', usersGet);
 
 router.post('/', usersPost);
 
-router.put('/', usersPut);
+router.put('/:id', usersPut);
 
 router.patch('/', usersPatch);
 

@@ -7,13 +7,22 @@ const usersGet = (req = request, res=response) => {
 };
 
 const usersPost =(req = request, res=response) => {
+    const { username, age } = req.body;
     res.status(200).json({
-        msg:'post API - controller'
+        msg:'post API - controller',
+        username,
+        age
     })
 };
 const usersPut = (req = request, res=response) => {
+    const id = req.params.id;
+    // Every time that you want the queries that the user do, you need to call req.query method.
+    const { page=1, limit=10 } = req.query;
     res.status(200).json({
-        msg:'put API - controller'
+        msg:'put API - controller',
+        id,
+        page,
+        limit
     })
 };
 const usersPatch = (req = request, res=response) => {
