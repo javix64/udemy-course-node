@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const { usersGet,usersPost, usersPut, usersPatch, usersDelete } = require('../controllers/users');
-const {check} = require('express-validator');
+const { usersGet, usersPost, usersPut, usersPatch, usersDelete } = require('../controllers/users');
+const { check } = require('express-validator');
 
 // const { validateFields } = require('../middlewares/validate-fields');
 // const { validateJWT } = require('../middlewares/validate-jwt');
@@ -27,17 +27,17 @@ const { isValidRole, emailExist, existUserById } = require('../helpers/db-valida
 
 router.get('/', usersGet);
 
-router.post('/',[
-    check('email','Email is not valid').isEmail(),
+router.post('/', [
+    check('email', 'Email is not valid').isEmail(),
     check('email').custom(emailExist),
-    check('password','Password needs to be greather than 6 characters').isLength({min:6}),
+    check('password', 'Password needs to be greather than 6 characters').isLength({ min: 6 }),
     check('rol').custom(isValidRole),
     check('name', 'Name is required').not().isEmpty(),
     validateFields
 ], usersPost);
 
-router.put('/:id',[
-    check('id', 'Not a valid ID').isMongoId(), 
+router.put('/:id', [
+    check('id', 'Not a valid ID').isMongoId(),
     check('id').custom(existUserById),
     check('rol').custom(isValidRole),
     validateFields
@@ -45,12 +45,12 @@ router.put('/:id',[
 
 router.patch('/', usersPatch);
 
-router.delete('/:id',[
+router.delete('/:id', [
     // the validation of JWT always need to be the first, in case that fails, the user cannot continue.
     validateJWT,
     isAdminRole,
     userHasRole('ADMIN_ROLE', 'USER_ROLE'),
-    check('id', 'Not a valid ID').isMongoId(), 
+    check('id', 'Not a valid ID').isMongoId(),
     check('id').custom(existUserById),
     validateFields
 ], usersDelete);

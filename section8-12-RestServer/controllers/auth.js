@@ -54,9 +54,9 @@ const googleSignIn = async (req, res = response) => {
                 img,
                 password: 'somePassword',
                 google: true,
-                rol:'USER_ROLE'
+                rol: 'USER_ROLE'
             };
-            user = new User( data );
+            user = new User(data);
             await user.save();
         }
         // If user is already registered
