@@ -19,8 +19,7 @@ router.get('/:id', [
 
 // create category - private - all people with a valid token
 router.post('/', [
-    // ToDo: when I arrived to home, please uncomment validateJWT
-    // validateJWT,
+    validateJWT,
     check('name', 'Name is required').not().isEmpty(),
     validateFields
 ], createCategory);

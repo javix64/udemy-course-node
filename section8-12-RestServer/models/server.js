@@ -3,7 +3,7 @@ const cors = require('cors');
 const { dbConnection } = require('../database/config');
 
 class Server {
-    constructor(){
+    constructor() {
         this.app = express();
         this.port = process.env.PORT;
 
@@ -14,10 +14,11 @@ class Server {
 
         // another refined way to define routes
         this.paths = {
-            auth:        '/api/auth',
-            users:       '/api/users',
-            categories:  '/api/categories',
-            products:  '/api/products',
+            auth: '/api/auth',
+            users: '/api/users',
+            categories: '/api/categories',
+            products: '/api/products',
+            search: '/api/search',
         }
 
         // Connect to DB
@@ -28,11 +29,11 @@ class Server {
         this.routes();
     }
 
-    async connectDB(){
+    async connectDB() {
         await dbConnection();
     }
 
-    middlewares(){
+    middlewares() {
         // CORS
         this.app.use(cors())
 
@@ -43,15 +44,16 @@ class Server {
         this.app.use(express.static('public'));
     }
 
-    routes(){
+    routes() {
         this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.users, require('../routes/users'));
         this.app.use(this.paths.categories, require('../routes/categories'));
         this.app.use(this.paths.products, require('../routes/products'));
+        this.app.use(this.paths.search, require('../routes/search'));
     }
 
-    start(){
-        this.app.listen(this.port,()=>{
+    start() {
+        this.app.listen(this.port, () => {
             console.log('Server running in port: ', this.port)
         })
     }

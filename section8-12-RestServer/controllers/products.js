@@ -1,75 +1,80 @@
 const { request, response } = require('express');
-const { Category } = require('../models');
+const { Product } = require('../models');
 
-const createCategory = async (req = request, res = response) => {
-    const name = req.body.name.toUpperCase();
-    const categoryDB = await Category.findOne({ name });
-    if (categoryDB) return res.status(400).json({ msg: `Category ${categoryDB.name}, already exists.` })
+const createProduct = async (req = request, res = response) => {
+    const { status, user, ...body } = req.body;
+
+    const productDB = await Product.findOne({ name: body.name });
+
+    if (productDB) return res.status(400).json({ msg: `Product ${productDB.name}, already exists.` })
+
     const data = {
-        name,
-        // user:req.user._id // => This is not working because it needs that validateJWT in route need to be active
-        // right now i will use user as id.
-        user: req.body.user,
+        ...body,
+        name: body.name.toUpperCase(),
+        user: req.user._id,
         status: req.body.status,
     };
 
-    const category = new Category(data);
-    await category.save();
-    res.status(201).json(category);
+    const product = new Product(data);
+    await product.save();
+    res.status(201).json(product);
 };
 
-// getCategories - paginated - total - populate
+// getProducts - paginated - total - populate
 
-const getCategories = async (req = request, res = response) => {
+const getProducts = async (req = request, res = response) => {
     const { limit = 5, start = 0 } = req.query;
     const query = { status: true }
-    const [total, categories] = await Promise.all([
-        Category.countDocuments(query),
-        Category.find(query)
+    const [total, products] = await Promise.all([
+        Product.countDocuments(query),
+        Product.find(query)
             .skip(Number(start))
             .limit(Number(limit))
             .populate('user', 'name')
+            .populate('category', 'name')
     ])
-    return res.status(400).json({ categories, total });
+    return res.status(400).json({ products, total });
 }
 
-// getCategory - populate {}
+// getProduct - populate {}
 
-const getCategory = async (req, res = response) => {
+const getProduct = async (req, res = response) => {
     const { id } = req.params;
-    const category = await Category
+    const product = await Product
         .findById(id)
         .populate('user', 'name')
+        .populate('category', 'name')
 
-    res.json(category)
+    res.json(product)
 }
 
 
-// updateCategory - name
+// updateProduct - name
 // recibe el nombre y se actualiza
 
-const updateCategory = async (req, res = response) => {
+const updateProduct = async (req, res = response) => {
     const { id } = req.params;
     const { status, user, ...data } = req.body;
-    data.name = data.name.toUpperCase();
+
+    if (data.name) data.name = data.name.toUpperCase();
     data.user = req.user._id;
 
-    const category = await Category.findByIdAndUpdate(id, data, { new: true });
+    const product = await Product.findByIdAndUpdate(id, data, { new: true });
 
-    res.json(category);
+    res.json(product);
 }
 
-// deleteCategory - status=> false
-const deleteCategory = async (req, res = response) => {
+// deleteProduct - status=> false
+const deleteProduct = async (req, res = response) => {
     const { id } = req.params;
-    const category = await Category.findByIdAndUpdate(id, { status: false }, { new: true });
-    res.status(200).json(`Category  ${id}: deleted successfully`);
+    const product = await Product.findByIdAndUpdate(id, { status: false }, { new: true });
+    res.status(200).json(`Product  ${id}: deleted successfully`);
 }
 
 module.exports = {
-    getCategories,
-    getCategory,
-    createCategory,
-    updateCategory,
-    deleteCategory
+    getProducts,
+    getProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct
 }

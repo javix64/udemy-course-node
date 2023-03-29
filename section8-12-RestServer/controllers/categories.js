@@ -7,9 +7,7 @@ const createCategory = async (req = request, res = response) => {
     if (categoryDB) return res.status(400).json({ msg: `Category ${categoryDB.name}, already exists.` })
     const data = {
         name,
-        // user:req.user._id // => This is not working because it needs that validateJWT in route need to be active
-        // right now i will use user as id.
-        user: req.body.user,
+        user: req.user._id,
         status: req.body.status,
     };
 
