@@ -8,6 +8,7 @@ const ProductSchema = Schema({
     category: {type: Schema.Types.ObjectId,ref: 'Category', required: true},
     description: {type:String},
     available: {type:Boolean, default:true},
+    img: {type:String}
 });
 
 // overwrite toJSON from mongoose method to retrieve all info except __v & password

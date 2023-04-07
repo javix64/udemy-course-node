@@ -1,4 +1,4 @@
-const { User, Category, Role, Product } = require('../models');
+const { User, Category, Role } = require('../models');
 const { validationResult } = require('express-validator');
 
 const isValidRole = async (rol = '') => {
@@ -20,9 +20,10 @@ const existCategoryById = async (id = '') => {
     if (!existId) throw new Error(`Category Id: ${id} does not exist.`)
 }
 
-const existProductById = async (id = '') => {
-    const existId = await Product.findById(id);
-    if (!existId) throw new Error(`Product Id: ${id} does not exist.`)
+const allowCollections = async (collection = '', collections = []) => {
+    const included = collections.includes(collection);
+    if(!included) { throw new Error(`Collection: ${collection} is not allowed`)}
+    return true;
 }
 
 module.exports = {
@@ -30,5 +31,5 @@ module.exports = {
     emailExist,
     existUserById,
     existCategoryById,
-    existProductById
+    allowCollections
 }

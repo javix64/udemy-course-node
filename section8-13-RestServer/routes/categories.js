@@ -2,44 +2,46 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { validateJWT, validateFields, isAdminRole } = require('../middlewares');
-const { existProductById, existCategoryById } = require("../helpers/db-validators");
-const { createProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("../controllers/products");
+const { createCategory, getCategories, getCategory, updateCategory, deleteCategory } = require("../controllers/categories");
+const { existCategoryById } = require("../helpers/db-validators");
 
 const router = Router();
 
 // get all categories - public
-router.get('/', getProducts);
+router.get('/', getCategories);
 
+// get one category - public
 router.get('/:id', [
     check('id', 'Is not a MongoId valid').isMongoId(),
-    check('id').custom(existProductById),
+    check('id').custom(existCategoryById),
     validateFields,
-], getProduct);
+], getCategory);
 
 // create category - private - all people with a valid token
 router.post('/', [
-    validateJWT,
+    // ToDo: when I arrived to home, please uncomment validateJWT
+    // validateJWT,
     check('name', 'Name is required').not().isEmpty(),
-    check('category', 'Category is not a mongoId').isMongoId(),
-    check('category').custom(existCategoryById),
     validateFields
-], createProduct);
+], createCategory);
 
 // update category - private - all people with a valid token
 router.put('/:id', [
     validateJWT,
-    check('id').custom(existProductById),
+    check('name', 'Name is required').not().isEmpty(),
+    check('id').custom(existCategoryById),
     validateFields
-], updateProduct);
+], updateCategory);
 
 // delete category - Admin
 router.delete('/:id', [
     validateJWT,
     isAdminRole,
     check('id', 'Is not a MongoId valid').isMongoId(),
-    check('id').custom(existProductById),
+    check('id').custom(existCategoryById),
     validateFields
-], deleteProduct);
+], deleteCategory);
+
 
 
 module.exports = router;

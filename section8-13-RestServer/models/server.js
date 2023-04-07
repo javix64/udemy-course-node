@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const { dbConnection } = require('../database/config');
+const fileUpload = require('express-fileupload');
 
 class Server {
-    constructor() {
+    constructor(){
         this.app = express();
         this.port = process.env.PORT;
 
@@ -14,11 +15,12 @@ class Server {
 
         // another refined way to define routes
         this.paths = {
-            auth: '/api/auth',
-            users: '/api/users',
-            categories: '/api/categories',
-            products: '/api/products',
-            search: '/api/search',
+            auth:        '/api/auth',
+            users:       '/api/users',
+            categories:  '/api/categories',
+            products:  '/api/products',
+            uploads:  '/api/uploads',
+
         }
 
         // Connect to DB
@@ -29,11 +31,11 @@ class Server {
         this.routes();
     }
 
-    async connectDB() {
+    async connectDB(){
         await dbConnection();
     }
 
-    middlewares() {
+    middlewares(){
         // CORS
         this.app.use(cors())
 
@@ -42,18 +44,25 @@ class Server {
 
         // Public directory
         this.app.use(express.static('public'));
+
+        // fileUpload
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }))
     }
 
-    routes() {
+    routes(){
         this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.users, require('../routes/users'));
         this.app.use(this.paths.categories, require('../routes/categories'));
         this.app.use(this.paths.products, require('../routes/products'));
-        this.app.use(this.paths.search, require('../routes/search'));
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
     }
 
-    start() {
-        this.app.listen(this.port, () => {
+    start(){
+        this.app.listen(this.port,()=>{
             console.log('Server running in port: ', this.port)
         })
     }

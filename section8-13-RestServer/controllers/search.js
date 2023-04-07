@@ -1,4 +1,4 @@
-const { response } = require("express");
+const {response} = require("express");
 const { ObjectId } = require('mongoose').Types;
 const { User, Category, Product } = require('../models');
 
@@ -10,22 +10,22 @@ const allowCollections = [
     'role'
 ]
 
-const searchUsers = async (term = '', res = response) => {
+const searchUsers = async(term = '', res=response) => {
     const isMongoID = ObjectId.isValid(term);
-    if (isMongoID) {
+    if(isMongoID){
         const user = await User.findById(term);
         return res.json({
-            result: (user) ? [user] : []
+            result: (user)? [user]: []
         })
     }
 
     const regex = new RegExp(term, 'i');
     const users = await User.find({
-        $or: [
-            { name: regex },
-            { email: regex }
+        $or:[
+            {name: regex},
+            {email: regex}
         ],
-        $and: [{ status: true }]
+        $and: [{status:true}]
     });
 
     res.json({
@@ -33,18 +33,18 @@ const searchUsers = async (term = '', res = response) => {
     })
 }
 
-const searchCategories = async (term = '', res = response) => {
+const searchCategories = async(term = '', res=response) => {
     const isMongoID = ObjectId.isValid(term);
-    if (isMongoID) {
+    if(isMongoID){
         const category = await Category.findById(term);
         return res.json({
-            result: (category) ? [category] : []
+            result: (category)? [category]: []
         })
     }
 
     const regex = new RegExp(term, 'i');
     const categories = await Category.find({
-        name: regex, status: true
+        name: regex, status:true
     });
 
     res.json({
@@ -53,27 +53,27 @@ const searchCategories = async (term = '', res = response) => {
 }
 
 
-const searchProducts = async (term = '', res = response) => {
+const searchProducts = async(term = '', res=response) => {
     const isMongoID = ObjectId.isValid(term);
-    if (isMongoID) {
+    if(isMongoID){
         const product = await Product
             .findById(term)
-            .populate('category', 'name');
+            .populate('category','name');
         return res.json({
-            result: (product) ? [product] : []
+            result: (product)? [product]: []
         })
     }
 
     const regex = new RegExp(term, 'i');
     const products = await Product
         .find({
-            $or: [
-                { name: regex },
-                { price: regex },
+        $or:[
+            {name: regex},
+            {price: regex},
 
-            ],
-            $and: [{ status: true }]
-        }).populate('category', 'name');
+        ],
+        $and: [{status:true}]
+    }).populate('category','name');
 
     res.json({
         result: products
@@ -83,26 +83,26 @@ const searchProducts = async (term = '', res = response) => {
 
 
 
-const search = (req, res = response) => {
-    const { collection, term } = req.params;
-    if (!allowCollections.includes(collection)) res.status(400).json({ msg: `Collection ${collection} is not a valid one.` })
+const search = (req, res=response) => {
+    const {collection, term} = req.params;
+    if(!allowCollections.includes(collection)) res.status(400).json({msg:`Collection ${collection} is not a valid one.`})
 
-    switch (collection) {
+    switch(collection){
         case 'users':
             searchUsers(term, res);
-            break;
+        break;
         case 'categories':
             searchCategories(term, res);
 
-            break;
+        break;
         case 'products':
 
-            break;
+        break;
 
         default:
-            res.status(500).json({ msg: `You did not do this search` })
+            res.status(500).json({msg:`You did not do this search`})
     }
 
 }
 
-module.exports = { search };
+module.exports = {search};
