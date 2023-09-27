@@ -48,13 +48,13 @@ class TicketControl {
   }
   respondTicket(desktop) {
     // we do not have tickets
-    if (this.length === 0) {
+    if (this.tickets.length === 0) {
       return null;
     }
     const ticket = this.tickets.shift(); // get the first ticket
     ticket.desktop = desktop;
     this.last4tickets.unshift(ticket); // add ticket to the first
-    if (this.last4tickets > 4) this.last4tickets.pop();
+    if (this.last4tickets > 4) this.last4tickets.splice(-1,1);
     this.saveDB();
     return ticket;
   }
